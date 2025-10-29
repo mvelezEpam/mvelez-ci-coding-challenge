@@ -2,6 +2,7 @@ package com.astrazeneca.ci.service;
 
 import com.astrazeneca.ci.dto.request.CreateInsightRequest;
 import com.astrazeneca.ci.dto.response.CreateInsightResponse;
+import com.astrazeneca.ci.dto.response.InsightResponse;
 import com.astrazeneca.ci.exception.NotFoundException;
 import com.astrazeneca.ci.model.Category;
 import com.astrazeneca.ci.model.Competitor;
@@ -37,8 +38,8 @@ public class InsightService {
         return INSIGHT_MAPPER.toCreatedDto(created);
     }
 
-    public Page<CreateInsightResponse> getInsights(String competitorName, String region, Category category, Instant from,
-                                                   Instant to, Pageable pageable) {
+    public Page<InsightResponse> getInsights(String competitorName, String region, Category category, Instant from,
+                                             Instant to, Pageable pageable) {
         Specification<Insight> spec = null;
         if (competitorName != null && !competitorName.isBlank()) {
             spec = InsightSpecification.competitorContains(competitorName);
@@ -73,6 +74,6 @@ public class InsightService {
         }
 
         return insightRepository.findAll(spec, pageable)
-                .map(INSIGHT_MAPPER::toCreatedDto);
+                .map(INSIGHT_MAPPER::toDto);
     }
 }

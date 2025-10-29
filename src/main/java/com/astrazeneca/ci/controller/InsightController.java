@@ -2,6 +2,7 @@ package com.astrazeneca.ci.controller;
 
 import com.astrazeneca.ci.dto.request.CreateInsightRequest;
 import com.astrazeneca.ci.dto.response.CreateInsightResponse;
+import com.astrazeneca.ci.dto.response.InsightResponse;
 import com.astrazeneca.ci.dto.response.PageResponse;
 import com.astrazeneca.ci.model.Category;
 import com.astrazeneca.ci.service.InsightService;
@@ -38,7 +39,7 @@ public class InsightController {
     }
 
     @GetMapping
-    public PageResponse<CreateInsightResponse> getInsights(
+    public PageResponse<InsightResponse> getInsights(
             @RequestParam(required = false) String competitorName,
             @RequestParam(required = false) String region,
             @RequestParam(required = false) Category category,

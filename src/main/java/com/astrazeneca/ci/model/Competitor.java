@@ -6,10 +6,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "competitors")
 public class Competitor {
 
@@ -25,4 +29,10 @@ public class Competitor {
 
     @Column(name = "country")
     private String country;
+
+    public Competitor(String name, String therapeuticArea, String country) {
+        this.name = name;
+        this.therapeuticArea = therapeuticArea;
+        this.country = country;
+    }
 }
