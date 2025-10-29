@@ -1,6 +1,7 @@
 package com.astrazeneca.ci.controller;
 
 import com.astrazeneca.ci.dto.request.CreateInsightRequest;
+import com.astrazeneca.ci.dto.request.SearchInsightsRequest;
 import com.astrazeneca.ci.dto.response.CreateInsightResponse;
 import com.astrazeneca.ci.dto.response.InsightResponse;
 import com.astrazeneca.ci.dto.response.PageResponse;
@@ -47,6 +48,13 @@ public class InsightController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant to,
             @PageableDefault(size = 10, sort = "id") Pageable pageable
     ) {
-        return PageResponse.of(insightService.getInsights(competitorName, region, category, from, to, pageable));
+        SearchInsightsRequest request = SearchInsightsRequest.builder()
+                .competitorName(competitorName)
+                .region(region)
+                .category(category)
+                .from(from)
+                .to(to)
+                .build();
+        return PageResponse.of(insightService.getInsights(request, pageable));
     }
 }

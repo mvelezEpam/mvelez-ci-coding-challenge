@@ -1,6 +1,7 @@
 package com.astrazeneca.ci.service;
 
 import com.astrazeneca.ci.dto.request.CreateInsightRequest;
+import com.astrazeneca.ci.dto.request.SearchInsightsRequest;
 import com.astrazeneca.ci.dto.response.CreateInsightResponse;
 import com.astrazeneca.ci.dto.response.InsightResponse;
 import com.astrazeneca.ci.exception.NotFoundException;
@@ -38,35 +39,34 @@ public class InsightService {
         return INSIGHT_MAPPER.toCreatedDto(created);
     }
 
-    public Page<InsightResponse> getInsights(String competitorName, String region, Category category, Instant from,
-                                             Instant to, Pageable pageable) {
+    public Page<InsightResponse> getInsights(SearchInsightsRequest request, Pageable pageable) {
         Specification<Insight> spec = null;
-        if (competitorName != null && !competitorName.isBlank()) {
-            spec = InsightSpecification.competitorContains(competitorName);
+        if (request.competitorName() != null && !request.competitorName().isBlank()) {
+            spec = InsightSpecification.competitorContains(request.competitorName());
         }
 
-        if (region != null && !region.isBlank()) {
+        if (request.region() != null && !request.region().isBlank()) {
             spec = (spec == null
-                    ? InsightSpecification.regionContains(region)
-                    : spec.and(InsightSpecification.regionContains(region)));
+                    ? InsightSpecification.regionContains(request.region())
+                    : spec.and(InsightSpecification.regionContains(request.region())));
         }
 
-        if (category != null) {
+        if (request.category() != null) {
             spec = (spec == null
-                    ? InsightSpecification.categoryIs(category)
-                    : spec.and(InsightSpecification.categoryIs(category)));
+                    ? InsightSpecification.categoryIs(request.category())
+                    : spec.and(InsightSpecification.categoryIs(request.category())));
         }
 
-        if (from != null) {
+        if (request.from() != null) {
             spec = (spec == null
-                    ? InsightSpecification.createdAtFrom(from)
-                    : spec.and(InsightSpecification.createdAtFrom(to)));
+                    ? InsightSpecification.createdAtFrom(request.from())
+                    : spec.and(InsightSpecification.createdAtFrom(request.from())));
         }
 
-        if (to != null) {
+        if (request.to() != null) {
             spec = (spec == null
-                    ? InsightSpecification.createdAtTo(to)
-                    : spec.and(InsightSpecification.createdAtTo(to)));
+                    ? InsightSpecification.createdAtTo(request.to())
+                    : spec.and(InsightSpecification.createdAtTo(request.to())));
         }
 
         if (spec == null) {
