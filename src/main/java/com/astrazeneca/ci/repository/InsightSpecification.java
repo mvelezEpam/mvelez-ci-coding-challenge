@@ -18,7 +18,7 @@ public class InsightSpecification {
 
     public static Specification<Insight> categoryIs(Category category) {
         return (root, query, cb) -> {
-            if (category == null) return cb.conjunction(); // ignore if null
+            if (category == null) return cb.conjunction();
             return cb.equal(root.get("category"), category);
         };
     }
