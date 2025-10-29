@@ -14,6 +14,7 @@ docker run -d -p 8080:8080 ci-app
 - Create Competitor endpoint
 - Create Insights endpoint
 - List/Filter insights endpoint
+- Competitor summary endpoint
 - Endpoint validations
 
 ## Known Limitations
