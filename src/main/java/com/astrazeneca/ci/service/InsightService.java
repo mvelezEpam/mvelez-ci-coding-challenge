@@ -2,6 +2,7 @@ package com.astrazeneca.ci.service;
 
 import com.astrazeneca.ci.dto.request.CreateInsightRequest;
 import com.astrazeneca.ci.dto.response.CreateInsightResponse;
+import com.astrazeneca.ci.exception.NotFoundException;
 import com.astrazeneca.ci.model.Category;
 import com.astrazeneca.ci.model.Competitor;
 import com.astrazeneca.ci.model.Insight;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 
 import static com.astrazeneca.ci.mapper.InsightMapper.INSIGHT_MAPPER;
 
@@ -27,19 +30,18 @@ public class InsightService {
     public CreateInsightResponse createInsight(CreateInsightRequest request) {
         Competitor competitor = competitorService.getCompetitorById(request.competitorId())
                 .orElseThrow(()
-                        -> new RuntimeException(String.format("Competitor with ID %s does not exist", request.competitorId())));
+                        -> new NotFoundException(String.format("Competitor with ID %s does not exist", request.competitorId())));
 
         Insight insight = INSIGHT_MAPPER.toEntity(request, competitor);
         Insight created = insightRepository.save(insight);
         return INSIGHT_MAPPER.toCreatedDto(created);
     }
 
-    public Page<CreateInsightResponse> getInsights(String competitorName, String region, Category category, Pageable pageable) {
+    public Page<CreateInsightResponse> getInsights(String competitorName, String region, Category category, Instant from,
+                                                   Instant to, Pageable pageable) {
         Specification<Insight> spec = null;
         if (competitorName != null && !competitorName.isBlank()) {
-            spec = (spec == null ?
-                    InsightSpecification.competitorContains(competitorName)
-                    : spec.and(InsightSpecification.competitorContains(competitorName)));
+            spec = InsightSpecification.competitorContains(competitorName);
         }
 
         if (region != null && !region.isBlank()) {
@@ -52,6 +54,18 @@ public class InsightService {
             spec = (spec == null
                     ? InsightSpecification.categoryIs(category)
                     : spec.and(InsightSpecification.categoryIs(category)));
+        }
+
+        if (from != null) {
+            spec = (spec == null
+                    ? InsightSpecification.createdAtFrom(from)
+                    : spec.and(InsightSpecification.createdAtFrom(to)));
+        }
+
+        if (to != null) {
+            spec = (spec == null
+                    ? InsightSpecification.createdAtTo(to)
+                    : spec.and(InsightSpecification.createdAtTo(to)));
         }
 
         if (spec == null) {

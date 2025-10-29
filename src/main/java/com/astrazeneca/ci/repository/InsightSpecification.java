@@ -4,6 +4,8 @@ import com.astrazeneca.ci.model.Category;
 import com.astrazeneca.ci.model.Insight;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.Instant;
+
 public class InsightSpecification {
 
     public static Specification<Insight> competitorContains(String competitorName) {
@@ -18,6 +20,20 @@ public class InsightSpecification {
         return (root, query, cb) -> {
             if (category == null) return cb.conjunction(); // ignore if null
             return cb.equal(root.get("category"), category);
+        };
+    }
+
+    public static Specification<Insight> createdAtFrom(Instant from) {
+        return (root, query, cb) -> {
+            if (from == null) return cb.conjunction();
+            return cb.greaterThanOrEqualTo(root.get("createdAt"), from);
+        };
+    }
+
+    public static Specification<Insight> createdAtTo(Instant to) {
+        return (root, query, cb) -> {
+            if (to == null) return cb.conjunction();
+            return cb.lessThanOrEqualTo(root.get("createdAt"), to);
         };
     }
 

@@ -3,6 +3,7 @@ package com.astrazeneca.ci.service;
 import com.astrazeneca.ci.dto.request.CreateCompetitorRequest;
 import com.astrazeneca.ci.dto.response.CompetitorSummaryResponse;
 import com.astrazeneca.ci.dto.response.CreateCompetitorResponse;
+import com.astrazeneca.ci.exception.NotFoundException;
 import com.astrazeneca.ci.model.Category;
 import com.astrazeneca.ci.model.Competitor;
 import com.astrazeneca.ci.repository.CompetitorRepository;
@@ -36,7 +37,7 @@ public class CompetitorService {
     public CompetitorSummaryResponse getCompetitorSummary(Long competitorId) {
         CompetitorSummaryResponse summaryResponse = competitorSummaryRepository.findCompetitorSummary(competitorId)
                 .orElseThrow(()
-                        -> new RuntimeException(String.format("Competitor with ID %s does not exist", competitorId)));
+                        -> new NotFoundException(String.format("Competitor with ID %s does not exist", competitorId)));
 
         List<Object[]> categoryCounts = competitorSummaryRepository.findCategoryCountsByCompetitorId(competitorId);
 

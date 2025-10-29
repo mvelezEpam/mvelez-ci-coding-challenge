@@ -19,7 +19,6 @@ This is the source code for the AstraZeneca coding challenge, implemented by Mau
 
 
 ## Known Limitations
-- Missing summary endpoint (TBC)
-- Global exception handler is still being implemented
+- The filter endpoint is not as dynamic as I wished
 - Docker support not implemented yet
 - Tests have yet to be completed
