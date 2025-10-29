@@ -12,7 +12,7 @@ public interface CompetitorMapper {
 
     CompetitorMapper COMPETITOR_MAPPER = Mappers.getMapper(CompetitorMapper.class);
 
-    @Mapping(target = "d", ignore = true)
+    @Mapping(target = "id", ignore = true)
     Competitor toEntity(CreateCompetitorRequest request);
 
     CreateCompetitorResponse toCreatedDto(Competitor competitor);
